@@ -1,11 +1,13 @@
 # i2c-moisture-sensor
 
+Tree form continuation of original project.
+
 I2C based soil moisture sensor. A continuation of the [Chirp - plant watering alarm](https://github.com/Miceuz/PlantWateringAlarm) project. There is also an [RS485](https://github.com/Miceuz/rs485-moist-sensor) and an [analog](https://github.com/Miceuz/soil-moisture-sensor-analog) version available.
 
 ## I2C protocol
 Available registers for reading and writing.
 
-  Name | Register | R/W | Data length 
+  Name | Register | R/W | Data length
 -------|----------|-----|-------------
 GET_CAPACITANCE   | 0x00 | (r) | 2
 SET_ADDRESS       | 0x01 | (w) | 1
@@ -54,7 +56,7 @@ class Chirp:
 		self.bus_num = bus
 		self.bus = smbus.SMBus(bus)
 		self.address = address
-    
+
 	def get_reg(self, reg):
 		# read 2 bytes from register
 		val = self.bus.read_word_data(self.address, reg)
@@ -135,7 +137,7 @@ print str(temp) + ":" + str(moisture) + ":" + str(light)
 ```
 
 ### Arduino library
-Ingo Fischer has written an Arduino library for the sensor, it has a couple of ready made examples: https://github.com/Apollon77/I2CSoilMoistureSensor 
+Ingo Fischer has written an Arduino library for the sensor, it has a couple of ready made examples: https://github.com/Apollon77/I2CSoilMoistureSensor
 
 Below are old examples for bare-bones Arduino illustrating a basic I2C use.
 
@@ -171,7 +173,7 @@ void loop() {
   Serial.print(", ");
   Serial.print(readI2CRegister16bit(0x20, 5)); //temperature register
   Serial.print(", ");
-  writeI2CRegister8bit(0x20, 3); //request light measurement 
+  writeI2CRegister8bit(0x20, 3); //request light measurement
   Serial.println(readI2CRegister16bit(0x20, 4)); //read light register
 }
 ```
@@ -180,20 +182,20 @@ void loop() {
 By default the sensor comes with 0x20 set as an address, this is an example on how to change address for indivitual sensor:
 ```arduino
 #include <Wire.h>
- 
+
 void writeI2CRegister8bit(int addr, int reg, int value) {
   Wire.beginTransmission(addr);
   Wire.write(reg);
   Wire.write(value);
   Wire.endTransmission();
 }
- 
+
 void writeI2CRegister8bit(int addr, int value) {
   Wire.beginTransmission(addr);
   Wire.write(value);
   Wire.endTransmission();
 }
- 
+
 void setup() {
   Wire.begin();
   Serial.begin(9600);
@@ -202,15 +204,15 @@ void setup() {
   writeI2CRegister8bit(0x20, 6);       //reset
   delay(1000);                         //give it some time to boot
 }
- 
-/*loop scans I2C bus and displays foud addresses*/ 
+
+/*loop scans I2C bus and displays foud addresses*/
 void loop()
 {
   byte error, address;
   int nDevices;
- 
+
   Serial.println("Scanning...");
- 
+
   nDevices = 0;
   for(address = 1; address < 127; address++ )
   {
@@ -219,7 +221,7 @@ void loop()
     // a device did acknowledge to the address.
     Wire.beginTransmission(address);
     error = Wire.endTransmission();
- 
+
     if (error == 0)
     {
       Serial.print("I2C device found at address 0x");
@@ -227,7 +229,7 @@ void loop()
         Serial.print("0");
       Serial.print(address,HEX);
       Serial.println("  !");
- 
+
       nDevices++;
     }
     else if (error==4)
@@ -242,7 +244,7 @@ void loop()
     Serial.println("No I2C devices found\n");
   else
     Serial.println("done\n");
- 
+
   delay(5000);           // wait 5 seconds for next scan
 }
 ```
